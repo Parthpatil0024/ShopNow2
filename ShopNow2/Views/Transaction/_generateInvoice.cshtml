@@ -1,0 +1,96 @@
+﻿@model ShopNow.ViewModels.InvoiceViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/bundles/modernizr")
+</head>
+
+
+
+
+
+
+<body>
+    <h1 class="text-center">Invoice</h1>
+    @if (string.IsNullOrEmpty(Convert.ToString(ViewBag.Hide)))
+    {
+
+        <a href="@Url.Action("PrintInvoice","Transaction",new {@InvoiceNo=Model.objTrans.InvoiceNo, @Email=ViewBag.Email})" class="col-md-2 offset-10"><h6><i class="fa fa-lg fa-print"></i></h6></a>
+
+    }
+    else
+    {
+
+        Layout = null;
+
+
+
+
+
+    }
+
+    <div class="clearfix">
+        <h5 class="pull-left"><b>Invoice No: @Model.objTrans.InvoiceNo</b></h5>
+        <h5 class="pull-right"> Date:  @Convert.ToDateTime(@Model.objTrans.InvoiceDate.Date).ToString("dd/MM/yyyy") </h5>
+    </div>
+
+    <h5>Customer Name : @Model.customer.CustomerName</h5>
+    <h5>Mobile No: @Model.customer.MobileNo</h5>
+    <hr />
+    <table class="table table-bordered  table-sm">
+        <thead style="background-color:cadetblue">
+            <tr>
+                <th class="text-center">Product Id</th>
+                <th class="text-center">Product Name</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-center"> Price</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.listTransItems)
+            {
+                <tr>
+                    <td class="text-center">@item.ProductId</td>
+                    <td class="text-center">@item.tblStock.ProductName</td>
+                    <td class="text-center">@item.Qty</td>
+                    <td class="text-center">@item.Price Rs.</td>
+
+
+
+
+                </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+    <hr />
+    <div class="clearfix">
+        <h5 class="pull-left">Payment Method: @Model.objTrans.PaymentMethod</h5>
+        <h5 class="pull-right">Total GST: @Model.objTrans.GST Rs.</h5>
+
+    </div>
+    <div class="clearfix">
+        <h5 class="pull-right">Total Discount: @Model.objTrans.TotalDiscount Rs.</h5>
+
+    </div>
+    <div class="clearfix">
+        <h4 class="pull-right"> <b>Total: @Model.objTrans.InvoiceAmount Rs.</b></h4>
+
+    </div>
+
+
+</body>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/boostrap")
+
+
+</html>
+
+
+

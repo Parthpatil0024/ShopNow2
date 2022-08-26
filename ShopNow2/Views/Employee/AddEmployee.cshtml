@@ -1,0 +1,64 @@
+﻿@model ShopNowBL.Models.EmployeeModel
+@{
+    ViewBag.Title = "AddEmployee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card mb-4">
+            <h5 class="card-header">Add Employee</h5>
+            <hr class="my-0" />
+            <div class="card-body">
+
+                @using (Html.BeginForm("saveEmployee", "Employee", FormMethod.Post))
+                {
+                    <div class="row ">
+                        <div class="mb-3 col-md-6">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Employee Name</label>
+                            @Html.HiddenFor(model=>model.Id)
+                            @Html.EditorFor(model => model.EmpName, new { htmlAttributes = new { @class = "form-control", pattern = "[a-zA-Z][a-zA-Z ]{2,}", required = "required", autofocus = true } })
+
+                        </div>
+
+                        <div class="mb-3 col-md-6">
+                            <label class="col-sm-2 col-form-label" for="basic-default-address">Address</label>
+
+                            <div class="input-group input-group-merge">
+                                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+
+
+
+
+                            </div>
+                        </div>
+                        <div class="mb-3 col-md-6">
+
+                            <label class="col-sm-2 col-form-label" for="basic-default-sal">Salary</label>
+
+                            @Html.EditorFor(model => model.Salary, new { htmlAttributes = new { @class = "form-control", pattern = @"^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$", required = "required" } })
+
+
+                        </div>
+                       
+                    </div>
+
+
+                    <div class="mt-1">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+

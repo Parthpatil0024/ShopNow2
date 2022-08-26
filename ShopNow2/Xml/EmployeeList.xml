@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Employees>
+  <Employee>
+    <Id>1</Id>
+    <EmpName>Parth Patil</EmpName>
+    <Address>Pune</Address>
+    <Salary>50000</Salary>
+  </Employee>
+  <Employee>
+    <Id>2</Id>
+    <EmpName>Kartik Gund</EmpName>
+    <Address>Pune</Address>
+    <Salary>53000</Salary>
+  </Employee>
+  <Employee>
+    <Id>3</Id>
+    <EmpName>Lokesh Bamnodkar</EmpName>
+    <Address>Jalgaon</Address>
+    <Salary>57000</Salary>
+  </Employee>
+</Employees>

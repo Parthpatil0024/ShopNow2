@@ -1,0 +1,452 @@
+﻿
+@{
+    ViewBag.Title = "SelectProducts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+
+
+        <!-- Bootstrap Dark Table -->
+        <div class="card">
+
+
+
+            <br />
+
+            <div id="invoice"></div>
+            <div id="selectProducts">
+                <h5 class="card-header">Select Products</h5>
+
+
+                <div class="table-responsive text-nowrap">
+                    <table id='ListData' class="table table-dark  table-sm">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th class="text-center">Buy Product</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                        </tbody>
+                    </table>
+                </div>
+
+                <br />
+
+
+                <div class="table-responsive text-nowrap">
+                    <table id='orderItems' class="table table-dark ">
+                        <thead>
+                            <tr>
+                                <th>Product Id</th>
+                                <th>Product Name</th>
+                                <th> Price</th>
+
+                                <th>Discount</th>
+                                <th>GST</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th class="text-center">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                        </tbody>
+
+                    </table>
+
+
+
+                    <br />
+
+                    <div class="mb-7 col-md-2">
+                        <h5><label>Total Bill</label></h5>
+                        <input type="text" id="totalBill" readonly class="form-control" value="0" />
+
+                    </div>
+                    <div>
+                        <br />
+                        <button type="button" class="btn btn-primary col-md-1 offset-11" id="proceed" data-bs-toggle="modal" data-bs-target="#AddCust" style="display:none">Proceed>></button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal" id="myModal">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add Product</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="form-horizontal">
+                                    <form id="first_form" method="post" action="">
+                                        <div class="form-group">
+                                            <input type="hidden" id="hdnProductId" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Product Name</label>  <input type="text" id="prodName" class=" form-control" readonly />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Selling Price</label> <input type="text" id="sellPrice" class=" form-control" readonly />
+                                        </div>
+
+                                        <div class="form-group">
+                                            Discount <input type="text" id="discount" class=" form-control" pattern="^((100)|(\d{1,2}(.\d*)?))$" max="100" min="0" maxlength="3" readonly />
+                                        </div>
+                                        <div>
+                                            GST<input type="text" id="gst" class=" form-control" pattern="^((100)|(\d{1,2}(.\d*)?))$" min="0" max="100" required />
+                                        </div>
+                                        <div>
+                                            Quantity<input type="text" id="Qty" class=" form-control" pattern="^[0-9]*$" required />
+                                        </div>
+
+
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer form-group">
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal" id="AddCust">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Checkout</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+
+                                <div class="form-horizontal">
+                                    <form id="first_form" method="post" action="">
+
+                                        <div class="form-group">
+                                            <label class="control-label">Customer Name</label>  <input type="text" id="custName" class=" form-control" pattern="[a-zA-Z][a-zA-Z ]{2,}" required />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Mobile No</label> <input type="text" id="mobileNo" class=" form-control" pattern="^!*(\d!*){10,}$" required />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Email</label> <input type="email" id="email" class=" form-control" required />
+                                        </div>
+                                        <br />
+                                        <div class="form-group">
+                                            <label>Payment Method</label>
+
+                                            @Html.DropDownList("paymentMethod", new List<SelectListItem>
+                                            {
+                                                new SelectListItem {Text = "Cash", Value = "Cash"},
+                                                new SelectListItem {Text = "Card", Value = "Card"},
+                                                new SelectListItem {Text = "UPI", Value = "UPI"}
+
+                                            }, "Please Select", new { @class = "form-control", @id = "paymentMethod" })
+
+
+
+                                        </div>
+
+
+
+
+                                        <!-- Modal footer -->
+                                        <br />
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="AddTransaction();">Done</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        GetData();
+        $("#first_form").submit(feedTable);
+        $.extend($.fn.dataTableExt.oStdClasses, {
+            "sFilterInput": "form-control ",
+            "sLengthSelect": "form-control text-center  "
+
+        });
+
+
+    })
+        var totalGST = 0;
+        var totalDiscount = 0;
+
+    function GetData() {
+        $.ajax({
+            type: "GET",
+            url: "/Stock/ajaxGetProductList",
+            dataType: 'json',
+            contentType: "application/json;",
+            success: function (data) {
+
+
+                $('#ListData tbody').empty();
+                $.each(data, function (key, item) {
+
+
+                    $('#ListData tbody').append(
+                        '<tr><td>' + item.ProductName +
+                        '</td><td>' + item.SellingPrice+" Rs." +
+                        '</td><td>' + item.Discount+"%" +
+                        '</td><td class="text-center" onclick="GetProduct(' + item.Id + ')"><a href="#"><i class=" btn btn-dark fas fa-shopping-cart"  data-bs-toggle="modal" data-bs-target="#myModal" > Add</i></a> ' +
+                        '</td></tr>'
+                    )
+
+
+                });
+                $('#ListData').DataTable();
+            }
+
+        });
+    }
+
+    function GetProduct(id) {
+
+        $("#hdnProductId").val(id);
+
+
+        $.ajax(
+            {
+                type: "POST", //HTTP POST Method
+                url: '@Url.Action("ajaxGetProdById", "Stock")', // Controller/View
+                data: '{Id: ' + JSON.stringify($("#hdnProductId").val()) + '}',
+
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+
+
+                    $("#prodName").val(result.ProductName);
+
+
+                    $("#sellPrice").val(result.SellingPrice);
+                    $("#discount").val(result.Discount);
+
+
+
+                }
+
+            });
+
+
+    }
+
+    function CalcTotalBill() {
+        var totalBill = 0;
+        $(".total").each(function () {
+            totalBill += parseFloat($(this).text());
+        });
+        $("#totalBill").val(totalBill);
+    }
+
+
+    function feedTable(e) {
+        e.preventDefault();
+        if (!this.snNo) this.snNo = 1;
+        var Name = $('#prodName').val(),
+            Id = $('#hdnProductId').val(),
+            SPrice = $('#sellPrice').val(),
+            Discount = $('#discount').val(),
+            Qty = $('#Qty').val()
+        GST = $("#gst").val()
+
+        var finalPrice = (SPrice * Qty) - (SPrice * Qty * (Discount / 100)) + (SPrice * Qty * (GST / 100))
+        totalDiscount = totalDiscount + (SPrice * Qty * (Discount / 100))
+
+        totalGST = totalGST + (SPrice * Qty * (GST / 100))
+
+
+
+        $('#orderItems').append(
+            "<tr><td class='id'>" + Id + "</td>" +
+            "<td>" + Name + "</td>" +
+            "<td>" + SPrice+" Rs" + "</td>" +
+            "<td>" + Discount +"%"+ "</td>" +
+            "<td>" + GST +"%"+ "</td>" +
+            "<td class='quantity'>" + Qty + "</td>" +
+            "<td class='total'>" + finalPrice + "</td> " +
+            "<td class='text-center'><button type='button' class='btn btn-sm btn-danger' id='remove' onclick='removeRow()'>"
+            +  "Remove"+
+           " </button></td></tr>"
+        )
+        this.snNo += 1;
+        cleanTable()
+        CalcTotalBill();
+
+        $("#Qty").val("");
+        $("#gst").val("");
+        cleanTable()
+        $("#proceed").show();
+
+
+
+    }
+
+        function AddTransaction() {
+            var count = $('#orderItems tr').length - 1;
+
+            var TItems = new Array();
+
+                $("#orderItems TBODY TR ").each(function () {
+
+                var row = $(this);
+                var TItem = {};
+                TItem.ProductId = row.find("TD").eq(0).html();
+                TItem.Qty = row.find("TD").eq(5).html();
+                    TItem.Price = row.find("TD").eq(6).html();
+                    TItems.push(TItem);
+
+            });
+
+
+
+        $.ajax(
+            {
+                type: "POST", //HTTP POST Method
+                url: '@Url.Action("ajaxAddTransaction", "Transaction")', // Controller/View
+                data: '{CustomerName: ' + JSON.stringify($("#custName").val()) + ', MobileNo:' + JSON.stringify($("#mobileNo").val())
+                    + ', TotalQty:' + JSON.stringify(count) + ', InvoiceAmount:' + JSON.stringify($("#totalBill").val())
+                    + ', GST:' + JSON.stringify(totalGST) + ', TotalDiscount:' + JSON.stringify(totalDiscount)
+                    + ', PaymentMethod:' + JSON.stringify($("#paymentMethod").val()) + ', TransactionItems:' + JSON.stringify(TItems) + '}',
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    generateInvoice(result);
+
+                    $("#orderItems TBODY tr").remove();
+                    $("#totalBill").val("");
+
+
+
+
+                },
+                error: function () {
+                    alert("Purchase failed!!!");
+                }
+
+            });
+
+        }
+
+
+        function cleanTable() {
+            for (var i = 1; i < $('#orderItems tbody tr').length; i++) {
+                for (var j = 2; j < $('#orderItems tbody tr').length; j++) {
+
+                   
+                   
+                    if ($('#orderItems  tbody  tr:nth-child(' + i + ')  td:nth-child(1)').text() == $('#orderItems  tbody  tr:nth-child(' + j + ') td.nth-child(1)').text() && i != j) {
+                        console.log("c");
+                        $('#orderItems tbody  tr:nth-child(' + j + ')  td').hide();
+
+                    } 
+                } 
+            } 
+
+        }
+
+        function removeRow() {
+            $('#orderItems').on('click', '#remove', function () {
+                $(this).closest('tr').remove();
+                CalcTotalBill();
+                if ($("#totalBill").val() == 0) {
+                    $("#proceed").hide();
+                }
+            });
+        }
+
+        function generateInvoice(InvoiceNo) {
+
+
+
+
+        $.ajax(
+            {
+                type: "POST", //HTTP POST Method
+                url: '@Url.Action("generateInvoice", "Transaction")', // Controller/View
+                data: '{InvoiceNo: ' + JSON.stringify(InvoiceNo) + ', Email:' + JSON.stringify($("#email").val()) + '}',
+
+
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (result) {
+
+                    $("#selectProducts").hide();
+                    $("#invoice").html(result);
+
+
+
+                }
+
+            });
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+

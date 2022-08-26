@@ -1,0 +1,249 @@
+﻿@model ShopNow2.ViewModels.UserAndStores
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en"
+      class="light-style customizer-hide"
+      dir="ltr"
+      data-theme="theme-default"
+      data-assets-path="/../assets/"
+      data-template="vertical-menu-template-free">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>Login Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/../assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet" />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="/../assets/vendor/fonts/boxicons.css" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="/../assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/../assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="/../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="/../assets/vendor/css/pages/page-auth.css" />
+    <!-- Helpers -->
+    <script src="/../assets/vendor/js/helpers.js"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="/../assets/js/config.js"></script>
+</head>
+<body>
+    <div class="content-wrapper">
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card mb-4">
+                <h5 class="card-header">Register Admin</h5>
+                <hr class="my-0" />
+                <div class="card-body">
+
+                    @using (Html.BeginForm("SaveAdmin", "Home", FormMethod.Post))
+                    {
+                        <div class="row ">
+                            <div class="mb-3 col-md-6">
+                                <label class="col-sm-2 col-form-label" for="basic-default-name">User Name</label>
+
+                                @Html.EditorFor(model => model.user.UserName, new { htmlAttributes = new { @class = "form-control", @required = "required", placeholder = "Please enter your Name", pattern = @"[a-zA-Z][a-zA-Z ]{2,}" } })
+
+                            </div>
+
+
+                            <div class="mb-3 col-md-6">
+                                <label class="col-sm-2 col-form-label" for="basic-default-email">Email</label>
+
+                                <div class="input-group input-group-merge">
+                                    @Html.EditorFor(model => model.user.EmailId, new { htmlAttributes = new { @class = "form-control", type = "email", placeholder = "Enter your Email Id", @required = "required" } })
+
+
+
+
+                                </div>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+
+                                <label class="col-sm-2 col-form-label" for="basic-default-phone">Mobile No.</label>
+
+                                @Html.EditorFor(model => model.user.MobileNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your Mobile No.", pattern = @"^!*(\d!*){10,}$", @required = "required" } })
+
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="mb-3 col-md-6">
+                                <label class="col-sm-2 col-form-label" for="basic-default-password">Password</label>
+
+                                @Html.EditorFor(model => model.user.Password, new { htmlAttributes = new { @class = "form-control", type = "password", placeholder = "Enter a password", id = "password", pattern = @"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}", @required = "required" } })
+
+                                <small id="strengthMessage" class="text-danger">
+
+                                </small>
+
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                @Html.Label("City", "City", new { @class = "form-label " })
+
+                                @Html.EditorFor(model => model.user.City, new { htmlAttributes = new { @class = "form-control", pattern = @"^[a-zA-Z',.\s-]{1,25}$", placeholder = "Enter your city", @required = "required" } })
+
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                @Html.Label("StoreId", "Store", new { @class = "form-label " })
+
+                                @Html.DropDownListFor(model => model.user.StoreId, new SelectList(Model.lstStores, "Id", "StoreName"), "Please select a Store", new { @class = "form-control", @required = "required" })
+
+                            </div>
+
+
+
+
+                            <div class="mt-1">
+                                <input type="submit" value="Register" class="btn btn-primary" />
+                            </div>
+                            <div class="text-center">
+                                <a href="@Url.Action("Login","Home")" class="d-flex align-items-center justify-content-center">
+                                    <i class="bx bx-chevron-left scaleX-n1-rtl bx-sm"></i>
+                                    Back to login
+                                </a>
+                            </div>
+
+                        </div>
+                            }
+
+
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+                <script src="/../assets/vendor/libs/jquery/jquery.js"></script>
+                <script src="/../assets/vendor/libs/popper/popper.js"></script>
+                <script src="/../assets/vendor/js/bootstrap.js"></script>
+                <script src="/../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+                <script src="/../assets/vendor/js/menu.js"></script>
+                <!-- endbuild -->
+                <!-- Vendors JS -->
+                <!-- Main JS -->
+                <script src="/../assets/js/main.js"></script>
+
+                <!-- Page JS -->
+                <!-- Place this tag in your head or just before your close body tag. -->
+                <script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+
+
+</html>
+<script>
+    $(document).ready(function () {
+        $('#password').keyup(function () {
+            $('#strengthMessage').html(passRequirements($('#password').val()))
+        })
+        @*function checkStrength(password) {
+            var strength = 0
+            if (password.length == 0) {
+                $('#strengthMessage').addClass("text-danger")
+                return ' '
+
+            }
+            if (password.length < 6) {
+                $('#strengthMessage').addClass("text-danger")
+                return 'Too short'
+
+            }
+
+            if (password.length > 7) strength += 1
+            // If password contains both lower and uppercase characters, increase strength value.
+            if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1
+            // If it has numbers and characters, increase strength value.
+            if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/)) strength += 1
+            // If it has one special character, increase strength value.
+            if (password.match(/([!,%,&,@@,#,$,^,*,?,_,~])/)) strength += 1
+            // If it has two special characters, increase strength value.
+            if (password.match(/(.*[!,%,&,@@,#,$,^,*,?,_,~].*[!,%,&,@@,#,$,^,*,?,_,~])/)) strength += 1
+            // Calculated strength value, we can return messages
+            // If value is less than 2
+            if (strength < 2) {
+                $('#strengthMessage').addClass("text-danger")
+                return 'Weak'
+            } else if (strength < 3) {
+                $('#strengthMessage').addClass("text-danger")
+                return 'Weak'
+            } else {
+                $('#strengthMessage').removeClass("text-danger")
+                $('#strengthMessage').addClass("text-success")
+                return 'Strong'
+            }
+        }*@
+    });
+
+
+    function passRequirements(password) {
+        $("#strengthMessage").addClass("text-danger");
+
+        if (password.length == 0) {
+           
+            return ' '
+
+        }
+        if (password.length < 6) {
+            $('#strengthMessage').addClass("text-danger")
+            return 'Too short'
+
+        }
+        if (!(/^(.{8,20}$)/.test(password))) {
+            return 'Password must be between 8 to 20 characters long.';
+        }
+        else if (!(/^(?=.*[A-Z])/.test(password))) {
+            return 'Password must contain at least one uppercase.';
+        }
+        else if (!(/^(?=.*[a-z])/.test(password))) {
+            return 'Password must contain at least one lowercase.';
+        }
+        else if (!(/^(?=.*[0-9])/.test(password))) {
+            return 'Password must contain at least one digit.';
+        }
+        else if (!(/^(?=.*[@@#$%&])/.test(password))) {
+            return "Password must contain special characters.";
+        } else if ((/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(password))) {
+            $("#strengthMessage").removeClass("text-danger");
+            $("#strengthMessage").addClass("text-success");
+            return "Strong Password"
+        }
+    }
+
+
+
+
+
+
+
+</script>

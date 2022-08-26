@@ -1,0 +1,99 @@
+﻿@model IEnumerable<ShopNowBL.Models.tblUser>
+@{
+    ViewBag.Title = "listAdmins";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+
+
+        <!-- Bootstrap Dark Table -->
+        <div class="card">
+            <h5 class="card-header">Admin List</h5>
+
+
+            <br />
+
+            <div class="table-responsive text-nowrap">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>
+                                Admin Name
+                            </th>
+                            <th>
+                                Email Id
+                            </th>
+                            <th>
+                                Mobile No
+                            </th>
+
+                            <th>
+                                City
+                            </th>
+                            <th>
+                                Store Id
+                            </th>
+                            <th>
+                                Created By
+                            </th>
+                            <th>
+                                Created Date
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><i class=" text-danger me-3"></i> <strong> @Html.DisplayFor(Modelitem => item.Id)</strong></td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EmailId)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MobileNo)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.City)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StoreId)
+
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedBy)
+
+                                </td>
+                                <td>
+                                    @Convert.ToDateTime(item.CreatedDate).ToString("dd/MM/yyyy")
+
+                                </td>
+
+                            </tr>
+
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <!--/ Bootstrap Dark Table -->
+
+    </div>
+</div>
+
+
+
+

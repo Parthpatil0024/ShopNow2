@@ -1,0 +1,139 @@
+﻿@model ShopNow2.ViewModels.UserAndStores
+@{
+    ViewBag.Title = "UserProfile";
+}
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+
+        <div class="card mb-4">
+            <h5 class="card-header">Profile Details</h5>
+            <!-- Account -->
+            <div class="card-body">
+                <div class="d-flex align-items-start align-items-sm-center gap-4">
+                    <img src="/../assets/img/avatars/2.png"
+                         alt="user-avatar"
+                         class="d-block rounded"
+                         height="100"
+                         width="100"
+                         id="uploadedAvatar" />
+                    <h3>Hello, @Session["Username"] </h3>
+
+                </div>
+            </div>
+            <hr class="my-0" />
+            <div class="card-body">
+                @using (Html.BeginForm("saveUserAfterEdit", "User", FormMethod.Post, new { id = "userform" }))
+                {
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            @Html.HiddenFor(Model => Model.user.Id)
+                            @Html.HiddenFor(Model => Model.user.Password)
+                            @Html.HiddenFor(Model => Model.user.CreatedDate)
+                            @Html.HiddenFor(Model => Model.user.CreatedBy)
+                            @*@Html.HiddenFor(Model => Model.user.RoleId, new { id = "roleid" })*@
+                            <label for="Name" class="form-label">User Name</label>
+
+                            @Html.EditorFor(model => model.user.UserName, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                            id = "userName",
+                                    name = "userName",
+                                    pattern = "[a-zA-Z][a-zA-Z ]{1,}",
+                                    autofocus = true,
+                                    required = "required"
+                                }
+                            })
+
+                        </div>
+
+                        <div class="mb-3 col-md-6">
+                            <label for="email" class="form-label">E-mail</label>
+
+
+                            @Html.EditorFor(model => model.user.EmailId, new
+                       {
+                           htmlAttributes = new
+                           {
+                               @class = "form-control",
+                               id = "email",
+                               name = "email",
+                               type = "email",
+                               required = "required",
+                               @readonly = true
+                           }
+                       })
+
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="mobileNo" class="form-label">Mobile No.</label>
+
+
+                            @Html.EditorFor(model => model.user.MobileNo, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                             id = "mobileNo",
+                                    name = "mobileNo",
+                                    pattern = @"^!*(\d!*){10,}$",
+                                    required = "required",
+                             @readonly = true
+                                }
+                            })
+
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label" for="role">Role</label>
+                            <div class="input-group input-group-merge">
+
+
+                                @Html.DropDownListFor(Model => Model.user.RoleId, new List<SelectListItem>
+            {
+                                new SelectListItem() {Text = "Admin", Value="1"},
+                                new SelectListItem() {Text = "Cashier", Value="2"}
+
+            }, "Please select a Role", new { @class = "form-control", id = "role", required = "required", disabled = true })
+                            </div>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="city" class="form-label">City</label>
+                            @Html.EditorFor(model => model.user.City, new { htmlAttributes = new { @class = "form-control", pattern = @"^[a-zA-Z',.\s-]{1,25}$", required = "required" } })
+                        </div>
+
+                        <div class="mb-3 col-md-6">
+                            <label for="store" class="form-label">Store</label>
+                            @Html.DropDownListFor(model => model.user.StoreId, new SelectList(Model.lstStores, "Id", "StoreName"), "Please select a Store", new { @class = "form-control", id = "store", disabled = "true", @required = "required" })
+                        </div>
+
+
+
+
+
+
+                    </div>
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-primary me-2">Save changes</button>
+                        <button type="reset" class="btn btn-outline-secondary">Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        $(document).ready(function () {
+            $("#userform").submit(function () {
+                $("#role").prop("disabled", false);
+                $("#store").prop("disabled", false);
+            })
+
+        })
+
+    </script>
+
+
