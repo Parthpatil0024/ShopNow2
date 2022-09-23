@@ -20,6 +20,8 @@ namespace ShopNowBL.Models
         public virtual DbSet<tblTransactionItem> tblTransactionItems { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblErrorLog> tblErrorLogs { get; set; }
+        public virtual DbSet<tblRole> tblRoles { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

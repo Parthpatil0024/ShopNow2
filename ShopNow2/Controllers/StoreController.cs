@@ -12,7 +12,7 @@ namespace ShopNow2.Controllers
    
     public class StoreController : Controller
     {
-        ExcepController excepController=new ExcepController();
+        ExcepRepo ExcepRepo=new ExcepRepo();
        StoreRepo storeRepo=new StoreRepo();
         // GET: Store
         public ActionResult listStores()
@@ -49,7 +49,7 @@ namespace ShopNow2.Controllers
             }catch(Exception ex)
             {
 
-                excepController.addException(ex);
+                ExcepRepo.addException(ex);
                 return View("Error");
             }
            
@@ -74,7 +74,7 @@ namespace ShopNow2.Controllers
                 return RedirectToAction("editStore");
             }catch(Exception ex)
             {
-                excepController.addException(ex);
+                ExcepRepo.addException(ex);
                 return View("Error");
             }
           

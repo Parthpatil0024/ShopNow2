@@ -34,5 +34,8 @@ namespace ShopNowBL.Models
         public int CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+        [ForeignKey("RoleId")]
+        public virtual tblRole tblRole { get; set; }
     }
 }

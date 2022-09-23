@@ -12,10 +12,4 @@
     <Address>Pune</Address>
     <Salary>53000</Salary>
   </Employee>
-  <Employee>
-    <Id>3</Id>
-    <EmpName>Lokesh Bamnodkar</EmpName>
-    <Address>Jalgaon</Address>
-    <Salary>57000</Salary>
-  </Employee>
 </Employees>

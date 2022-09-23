@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "excelUpload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card mb-4">
+            <h5 class="card-header">Excel Upload</h5>
+            <hr class="my-0" />
+            <div class="card-body">
+
+                <div style="margin-top:20px;">
+                    <input type="file" id="FileUpload1" required />
+                    <input type="button" id="btnUpload" class="btn btn-primary" style="margin-left: 10px; background-color: #2651be;" value="Upload Data" />
+                    <small id="msg"></small>
+                </div>
+              
+                <script>
+    $(document).ready(function () {
+        $("#btnUpload").on("click", function () {
+            UploadData();
+            $("#msg").css("display", "none");
+        });
+        $("#msg").css("display", "none");
+    });
+
+    function UploadData() {
+
+            if (window.FormData !== undefined) {
+                var fileUpload = $("#FileUpload1").get(0);
+
+                var files = fileUpload.files;
+                if (files.length > 0) {
+                    var fileData = new FormData();
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                    }
+                    
+
+                       
+                        $.ajax({
+                            url: '@Url.Action("UploadExcel", "Home")',
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: fileData,
+                            success: function (result) {
+                                if (result == "success") {
+                                    $("#msg").text("File uploaded successfully.");
+                                    $("#msg").addClass("text-success")
+                                    $("#msg").css("display", "block");
+                                } else {
+                                    $("#msg").text("File upload failed!!");
+                                    $("#msg").addClass("text-danger")
+                                    $("#msg").css("display", "block");
+                                }
+                            },
+                            error: function () {
+                                $("#msg").text("File upload failed!!");
+                                $("#msg").addClass("text-danger")
+                                $("#msg").css("display", "block");
+                             
+                            }
+                        });
+                    }
+
+
+                else {
+                    $("#msg").text("Please select a file to upload!!");
+                    $("#msg").addClass("text-danger")
+                    $("#msg").css("display", "block");
+                }
+        }
+    }
+
+                </script>
+            </div>
+            </div>
+        </div>
+    </div>
+

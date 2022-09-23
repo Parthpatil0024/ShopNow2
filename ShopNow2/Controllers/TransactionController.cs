@@ -16,7 +16,7 @@ namespace ShopNow2.Controllers
     public class TransactionController : Controller
     {
         // GET: Transaction
-        ExcepController excepController=new ExcepController();
+        ExcepRepo ExcepRepo = new ExcepRepo();
         TransactionRepo transactionRepo = new TransactionRepo();
         UserRepo userRepo = new UserRepo();
        
@@ -46,7 +46,7 @@ namespace ShopNow2.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex) { 
-            excepController.addException(ex);
+            ExcepRepo.addException(ex);
                 return View("Error");
             }
            
@@ -123,7 +123,7 @@ namespace ShopNow2.Controllers
             }
             catch (Exception ex)
             {
-                excepController.addException(ex);
+                ExcepRepo.addException(ex);
                 return View("Error");
             }
 

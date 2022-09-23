@@ -10,10 +10,11 @@ namespace ShopNow2.Controllers
 {
     public class StockController : Controller
     {
-        ExcepController excepController = new ExcepController();
+        ExcepRepo ExcepRepo = new ExcepRepo();
 
         StockRepo stockRepo =new StockRepo();
         // GET: Stock
+        [Authorize(Roles = "Admin,Cashier")]
         public ActionResult listProducts()
         {
             List<tblStock> lstProducts;
@@ -24,6 +25,9 @@ namespace ShopNow2.Controllers
 
             return View(lstProducts);
         }
+
+        [Authorize(Roles = "Admin,Cashier")]
+
         public ActionResult addProduct()
         {
            
@@ -32,20 +36,13 @@ namespace ShopNow2.Controllers
             
             
         }
+
+        [Authorize(Roles = "Admin,Cashier")]
+
         public ActionResult saveProduct(tblStock newProduct)
         {
-            /* var loggedInUser = (tblUser)HttpContext.Session["User"];
-             newProduct.CreatedBy = loggedInUser.Id;
-             newProduct.CreatedDate = DateTime.Now;
-             bool result = stockRepo.saveProduct(newProduct);
-             if (result)
-             {
-                 return RedirectToAction("listProducts");
-             }
-             return RedirectToAction("addProduct");*/
-
-            /*try
-            {*/
+            try
+            {
                 var loggedInUser = (tblUser)HttpContext.Session["User"];
                 newProduct.CreatedBy = loggedInUser.Id;
                 newProduct.CreatedDate = DateTime.Now;
@@ -55,14 +52,16 @@ namespace ShopNow2.Controllers
                     return RedirectToAction("listProducts");
                 }
                 return RedirectToAction("addProduct");
-           /* }
+            }
+
             catch (Exception ex)
-            { 
-                excepController.addException(ex);
+            {
+                ExcepRepo.addException(ex);
                 return View("Error");
-               
-            }*/
+
+            }
         }
+        [Authorize(Roles = "Admin,Cashier")]
 
         public ActionResult saveProductAfterEdit(tblStock product)
         {
@@ -76,17 +75,23 @@ namespace ShopNow2.Controllers
             }
             catch (Exception ex)
             {
-                excepController.addException(ex);
+                ExcepRepo.addException(ex);
                 return View("Error");
 
             }
 
         }
+
+        [Authorize(Roles = "Admin,Cashier")]
+
         public ActionResult editProduct(int id)
         {
             tblStock product = stockRepo.getProductById(id);
             return View(product);
         }
+
+        [Authorize(Roles = "Admin")]
+
         public ActionResult deleteProduct(int id)
         {
             bool result = stockRepo.deleteProduct(id);
@@ -97,11 +102,15 @@ namespace ShopNow2.Controllers
             return RedirectToAction("Home", "Index");
         }
 
+        [Authorize(Roles = "Admin,Cashier")]
+
         public ActionResult ajaxGetProductList()
         {
             var productList = stockRepo.listProducts();
             return Json(productList, JsonRequestBehavior.AllowGet);
         }
+
+        [Authorize(Roles = "Admin,Cashier")]
 
         public ActionResult ajaxGetProdById(string Id)
         {

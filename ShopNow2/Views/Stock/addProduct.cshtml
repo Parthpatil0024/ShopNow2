@@ -19,7 +19,7 @@
                         <div class="mb-3 col-md-6">
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Product Name</label>
 
-                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", @*pattern = "[a-zA-Z][a-zA-Z ]{2,}",*@ autofocus = true@*, required = "required"*@ } })
+                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control", pattern = "[a-zA-Z][a-zA-Z ]{2,}",autofocus = true, required = "required" } })
 
                         </div>
 
@@ -27,7 +27,7 @@
                             <label class="col-sm-2 col-form-label" for="basic-default-email">Qty</label>
 
                             <div class="input-group input-group-merge">
-                                @Html.EditorFor(model => model.ProductQty, new { htmlAttributes = new { @class = "form-control", min = "1", pattern = "^[0-9]*$", required = "required" } })
+                                @Html.EditorFor(model => model.ProductQty, new { htmlAttributes = new { @class = "form-control", min = "1", type = "text", pattern = "^[0-9]*$", required = "required" } })
 
 
 
@@ -38,7 +38,7 @@
 
                             <label class="col-sm-2 col-form-label" for="basic-default-phone">Base Price</label>
 
-                            @Html.EditorFor(model => model.BasePrice, new { htmlAttributes = new { @class = "form-control", pattern = @"^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$", required = "required" } })
+                            @Html.EditorFor(model => model.BasePrice, new { htmlAttributes = new { @class = "form-control",type="text", pattern = @"^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$", required = "required" } })
 
 
                         </div>

@@ -1,4 +1,5 @@
 ﻿
+
 @{
     Layout = null;
 }
@@ -16,7 +17,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Forgot Password </title>
+    <title>Login Api</title>
 
     <meta name="description" content="" />
 
@@ -50,14 +51,11 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="/../assets/js/config.js"></script>
 </head>
-
 <body>
-    <!-- Content -->
-
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner py-4">
-                <!-- Forgot Password -->
+            <div class="authentication-inner">
+                <!-- Register -->
                 <div class="card">
                     <div class="card-body">
                         <!-- Logo -->
@@ -109,61 +107,59 @@
                                 <span class="app-brand-text demo text-body fw-bolder">ShopNow</span>
                             </a>
                         </div>
-                        <div id="resetPwd"></div>
-                        <div id="forgotPwd">
                         <!-- /Logo -->
-                        <h4 class="mb-2">Forgot Password? 🔒</h4>
-                        <p class="mb-4">Enter your email and we'll send you an OTP </p>
+                        <h4 class="mb-2">Welcome to ShopNow! 👋</h4>
+                        <p class="mb-4">Please sign-in to your account </p>
+
+
+
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" id="email" class="form-control " autofocus placeholder="Please enter your registered email" required>
-                            <div id="invalidEmail" class="alert alert-danger" role="alert">
+                            <label for="email" class="form-label">Email or Username</label>
+                            <input type="email" id="email" name="email" class="form-control"
+                                   placeholder="Enter your email or username" autofocus required />
+
+
+                        </div>
+                        @*<div class="mb-3 form-password-toggle">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label" for="password">Password</label>
+                                <a href="#">
+                                    <small>Forgot Password?</small>
+                                </a>
+                            </div>*@
+                            <div class="input-group input-group-merge">
+
+                                <input type="password" id="password" name="password" class="form-control"
+                                       placeholder="Enter your password" autofocus required />
+
+
+
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            </div>
+                            <div id="invalid" class="alert alert-danger" role="alert">
                                 <small class="text-danger">
-                                    Please enter a valid email!
+                                    Invalid Details!!!
                                 </small>
                             </div>
-                            <div class="alert alert-success" id="otpsent" role="alert">
-                                <small class="text-success">
-                                    OTP sent on Email Id valid for <b><span id="countdowntimer">5 </span></b>  minutes.
-                                </small>
-                            </div>
-                           
-
                         </div>
+
                         <div class="mb-3">
-                            <label for="otp" id="otplabel" class="form-label">OTP</label>
-                            <input type="text" id="otp" class="form-control" placeholder="Enter the OTP" min="100000" max="999999" maxlength="6" pattern="^[0-9]{6,6}$" required>
-                            <div id="otperrorAlert"class="alert alert-danger" role="alert">
-                                <small id="otperror" class="text-danger">
-
-                                </small>
-                            </div>
-
-
-                        </div>
-                        <div id="sendotp" >
-                           <input type="button" id="sendotpbtn" value="Send OTP" class="btn btn-primary d-grid w-100" onclick="VerifyEmail();" />
-
-                        </div>
-                        <div id="verifyotp">
-
-                            <button class="btn btn-primary d-grid w-100" id="verifyotpbtn"onclick="VerifyOtp();">Verify</button>
+                            <button class="btn btn-primary d-grid w-100" type="button" onclick="authenticateUser()">Sign in</button>
                         </div>
 
-                                <div class="text-center">
-                                    <a href="@Url.Action("Login","Home")" class="d-flex align-items-center justify-content-center">
-                                        <i class="bx bx-chevron-left scaleX-n1-rtl bx-sm"></i>
-                                        Back to login
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                <!-- /Forgot Password -->
+
+                       @* <p class="text-center">
+                            <span>New on our platform?</span>
+                            <a href=@Url.Action("RegisterAdmin","Home")>
+                                <span>Register</span>
+                            </a>
+                        </p>*@
+                    </div>
+                </div>
+                <!-- /Register -->
             </div>
         </div>
-    </div>
-        </div>
-       
+    
 
     <!-- / Content -->
     <!-- Core JS -->
@@ -183,205 +179,51 @@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script>
-
         $(document).ready(function () {
-            $("#invalidEmail").hide();
-            $("#otp").hide();
-            $("#otplabel").hide();
-            $("#otpsent").hide();
-            $("#verifyotp").hide();
-            $("#otperrorAlert").hide()
-            
-           
-
-
-
+            $("#invalid").css("display", "none");
             $('#email').focus(function () {
-                $("#invalidEmail").hide();
-                $("#otpsent").hide();
+                $("#invalid").css("display", "none");
             });
-            $('#otp').focus(function () {
-                $("#otperror").hide();
-                $("#otperrorAlert").hide()
+            $('#password').focus(function () {
+                $("#invalid").css("display", "none");
             });
-           
+    })
 
-
-        })
-
-
-            function VerifyEmail() {
-                $("#email").prop("disabled", true);
-
-
-        $.ajax(
-            {
-                type: "POST", //HTTP POST Method
-                url: '@Url.Action("VerifyEmail", "Home")', // Controller/View
-                data: '{EmailId: ' + JSON.stringify($("#email").val()) + '}',
-
-
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-
-                success: function (result) {
-
-                    $("#sendotp").hide();
-                    $("#otp").show();
-
-                    $("#otplabel").show();
-                    $("#verifyotp").show();
-                    $("#otpsent").show();
-                   
-                    $("#otp").focus();
-                    document.getElementById('countdowntimer').innerHTML =
-                        05 + ":" + 00;
-                    startTimer();
+        function authenticateUser() {
 
 
 
 
+            $.ajax(
+                {
+                    type: "POST", //HTTP POST Method
+                    url: '@Url.Action("authenticateUserApi", "User")', // Controller/View
+                    data: '{EmailId: ' + JSON.stringify($("#email").val()) + ', Password:' + JSON.stringify($("#password").val()) + '}',
+
+
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+
+                        
+                        console.log(result);
+                        if (result == true) {
+                            window.location.href = "@Url.Action("lstUserApi", "User")";
+                        } else {
+                            $("#invalid").css("display", "block");
+                        }
 
 
 
+                    },
+                    
 
-
-                },
-                error(result) {
-
-                    $("#invalidEmail").show();
-                    $("#email").prop("disabled", false);
-                }
-
-            });
+                });
 
 
         }
-        function VerifyOtp() {
-            var otp = $.trim($("#otp").val());
-
-            if (otp.length > 1) {
-
-                $.ajax(
-                    {
-                        type: "POST", //HTTP POST Method
-                        url: '@Url.Action("VerifyOtp", "Home")', // Controller/View
-                        data: '{Otp: ' + JSON.stringify($("#otp").val()) + ',EmailId: ' + JSON.stringify($("#email").val()) + '}',
-
-
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (result) {
-                            if (result == "Valid OTP") {
-
-                                ResetPassword();
-                            } else if (result == "OTP expired") {
-                                $("#otperror").text(result).show();
-                                $("#otperrorAlert").show()
-                                $("#otp").val("");
-                            } else if (result == "Invalid OTP") {
-                                $("#otperror").text(result).show()
-                                $("#otperrorAlert").show()
-                                $("#otp").val("");
-                            } else if (result == "OTP Already Used") {
-                                $("#otperror").text(result).show()
-                                $("#otperrorAlert").show()
-                                $("#otp").val("");
-                                $("#sendotp").show();
-                                $("#error").hide();
-                            }
-
-
-
-
-
-                        },
-                        error(result) {
-                            console.log("error");
-
-                        }
-
-                    });
-            }
-
-
-    }
-
-
-        function ResetPassword() {
-
-
-        $.ajax(
-            {
-                type: "POST", //HTTP POST Method
-                url: '@Url.Action("ResetPassword", "Home")', // Controller/View
-                data: '{EmailId: ' + JSON.stringify($("#email").val()) + '}',
-
-
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (result) {
-                    $("#forgotPwd").hide();
-                    $("#resetPwd").html(result);
-
-
-
-
-
-                }
-
-
-            });
-
-
-            }
-
-            function startTimer() {
-                var timer;
-                clearTimeout(timer);
-
-                var presentTime = document.getElementById('countdowntimer').innerHTML;
-                var timeArray = presentTime.split(/[:]+/);
-                var m = timeArray[0];
-                var s = checkSecond((timeArray[1] - 1));
-                if (s == 59) { m = m - 1 }
-                if (m < 0) {
-                    $("#otplabel").hide();
-                    $("#verifyotp").hide();
-                    $("#otp").hide();
-                    $("#otpsent").hide();
-                    
-                    $("#sendotp").show();
-                    
-                    $("#email").prop("disabled", false);
-
-
-                }
-
-                document.getElementById('countdowntimer').innerHTML =
-                    m + ":" + s;
-                console.log(m)
-
-                if (m >= 0 && (s > 0 || s < 59)) {
-                    timer = setTimeout(startTimer, 1000);
-}
-
-
-
-
-
-            }
-
-            function checkSecond(sec) {
-                if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
-                if (sec < 0) { sec = "59" };
-                return sec;
-            }
-
-
-
-
 
     </script>
 </body>
+
 </html>

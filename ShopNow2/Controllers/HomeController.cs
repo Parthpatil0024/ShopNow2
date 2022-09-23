@@ -11,13 +11,19 @@ using ShopNow2.ViewModels;
 using System.Configuration;
 using System.IO;
 using System.Security.Policy;
+using System.Data.OleDb;
+using System.Data;
+using System.Runtime.InteropServices;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Web.Security;
 
 namespace ShopNow2.Controllers
 {
     
     public class HomeController : Controller
     {
-        ExcepController excepController=new ExcepController();
+        ExcepRepo ExcepRepo=new ExcepRepo();
         UserRepo userRepo=new UserRepo();
         StoreRepo storeRepo = new StoreRepo();
         public ActionResult Index()
@@ -38,19 +44,21 @@ namespace ShopNow2.Controllers
 
             return View();
         }
-
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
-
+        [AllowAnonymous]
         public ActionResult authenticateUser(string EmailId,string Password)
         {
             bool result = false;
             var user = userRepo.authenticateUser(EmailId, Password);
             if (user != null)
             {
-                Session["User"] = user;
+                FormsAuthentication.SetAuthCookie(user.EmailId, false);
+
+                    Session["User"] = user;
                 Session["UserName"]=user.UserName;
                 result = true;
                 
@@ -69,12 +77,12 @@ namespace ShopNow2.Controllers
             Session["UserName"] = null;
             return RedirectToAction("Login");
         }
-
+        
         public ActionResult forgotPassword()
         {
             return View();
         }
-
+        
         public ActionResult VerifyEmail(string EmailId)
         {
             tblUser user = userRepo.VerifyEmail(EmailId);
@@ -122,7 +130,7 @@ namespace ShopNow2.Controllers
                     }
                     catch (Exception ex)
                     {
-                        excepController.addException(ex);
+                        ExcepRepo.addException(ex);
                     }
                 }
 
@@ -130,7 +138,7 @@ namespace ShopNow2.Controllers
 
             return Json(user, JsonRequestBehavior.AllowGet);
         }
-
+       
         public ActionResult VerifyOtp(string Otp, string EmailId)
         {
             tblOTP objOTP = userRepo.getOtpByEmail(EmailId);
@@ -167,7 +175,7 @@ namespace ShopNow2.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-
+      
         public ActionResult ResetPassword(string EmailId)
         {
             tblUser user = userRepo.VerifyEmail(EmailId);
@@ -175,7 +183,7 @@ namespace ShopNow2.Controllers
 
             return PartialView("_ResetPassword");
         }
-
+      
         public ActionResult SavePassword(string email, string pass1)
         {
             try
@@ -188,7 +196,7 @@ namespace ShopNow2.Controllers
                 return View();
             }
             catch (Exception ex) {
-                excepController.addException(ex);
+                ExcepRepo.addException(ex);
                 return View("Error");
             }
             
@@ -217,18 +225,18 @@ namespace ShopNow2.Controllers
             }
             catch (Exception ex)
             {
-                excepController.addException(ex);
+                ExcepRepo.addException(ex);
                 return View("Error");
             }
             
         }
 
-
+        [Authorize(Roles = "Admin")]
         public ActionResult writeFile()
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult saveTxt(string txtdata)
         {
             var line = Environment.NewLine;
@@ -258,13 +266,160 @@ namespace ShopNow2.Controllers
             }
             catch (Exception e)
             {
-                excepController.addException(e);
+                ExcepRepo.addException(e);
 
             }
             return RedirectToAction("Login", "Home");
         }
-            
-        
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult excelUpload()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult UploadExcel()
+        {
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+                    DataSet ds = new DataSet();
+                    HttpPostedFileBase files = Request.Files[0];
+                    string fileName = "ExcelUpload_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx";
+                    var path = ConfigurationManager.AppSettings["ExcelFilePath"].ToString();
+                    var fullFilePath = path + "\\" + fileName;
+                    files.SaveAs(path + "\\" + fileName);
+
+                    string conString = string.Empty;
+
+                    conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fullFilePath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=1\"";
+
+                    using (OleDbConnection connExcel = new OleDbConnection(conString))
+                    {
+                        using (OleDbCommand cmdExcel = new OleDbCommand())
+                        {
+                            using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                            {
+                                cmdExcel.Connection = connExcel;
+                                //Get the name of First Sheet.
+                                connExcel.Open();
+                                DataTable dtExcelSchema;
+                                dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                                string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                                connExcel.Close();
+
+                                //Read Data from First Sheet.
+                                connExcel.Open();
+                                cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                                odaExcel.SelectCommand = cmdExcel;
+                                odaExcel.Fill(ds);
+                                connExcel.Close();
+                            }
+                        }
+                    }
+                   string sqlconn = ConfigurationManager.ConnectionStrings["DBTContext"].ConnectionString;
+                   var con = new SqlConnection(sqlconn);
+                    SqlBulkCopy objbulk = new SqlBulkCopy(con);
+
+                    objbulk.DestinationTableName = "tblCustomer";
+                    //Mapping Table column      
+                    objbulk.ColumnMappings.Add("CustomerName", "CustomerName");
+                    objbulk.ColumnMappings.Add("MobileNo", "MobileNo");
+                    objbulk.ColumnMappings.Add("CreatedBy", "CreatedBy");
+                    objbulk.ColumnMappings.Add("CreatedDate", "CreatedDate");
+                    con.Open();
+                    objbulk.WriteToServer(ds.Tables[0]);
+                    con.Close();
+
+                    return Json("success");
+                }
+                catch (Exception ex)
+                {
+                    ExcepRepo.addException(ex);
+                }
+
+            }
+            return Json("error");
+
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult csvUpload()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult UploadCsv()
+        {
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+                    DataSet ds = new DataSet();
+                    HttpPostedFileBase files = Request.Files[0];
+                    string fileName = "ExcelUpload_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+                    var path = ConfigurationManager.AppSettings["ExcelFilePath"].ToString();
+                    var fullFilePath = path + @"\" + fileName;
+                    files.SaveAs(path + @"\" + fileName);
+
+                    string conString = string.Empty;
+
+                    conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties=\'Text;HDR=YES;FMT=Delimited;\'";
+
+                    using (OleDbConnection connExcel = new OleDbConnection(conString))
+                    {
+                        using (OleDbCommand cmdExcel = new OleDbCommand())
+                        {
+                            using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                            {
+                                cmdExcel.Connection = connExcel;
+                                //Get the name of First Sheet.
+                                connExcel.Open();
+                                DataTable dtExcelSchema;
+                                dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                                string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                                connExcel.Close();
+
+                                //Read Data from First Sheet.
+                                connExcel.Open();
+                                cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                                odaExcel.SelectCommand = cmdExcel;
+                                odaExcel.Fill(ds);
+                                connExcel.Close();
+                            }
+                        }
+                    }
+                    string sqlconn = ConfigurationManager.ConnectionStrings["DBTContext"].ConnectionString;
+                    var con = new SqlConnection(sqlconn);
+                    SqlBulkCopy objbulk = new SqlBulkCopy(con);
+
+                    objbulk.DestinationTableName = "tblCustomer";
+                    //Mapping Table column      
+                    objbulk.ColumnMappings.Add("CustomerName", "CustomerName");
+                    objbulk.ColumnMappings.Add("MobileNo", "MobileNo");
+                    objbulk.ColumnMappings.Add("CreatedBy", "CreatedBy");
+                    objbulk.ColumnMappings.Add("CreatedDate", "CreatedDate");
+                    con.Open();
+                    objbulk.WriteToServer(ds.Tables[0]);
+                    con.Close();
+
+                    return Json("File Uploaded Successfully!");
+                }
+                catch (Exception ex)
+                {
+                    ExcepRepo.addException(ex);
+                    
+                }
+
+            }
+            return Json("File Not Uploaded Successfully!");
+
+        }
+
 
 
     }

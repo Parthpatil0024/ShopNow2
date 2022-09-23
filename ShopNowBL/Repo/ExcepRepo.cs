@@ -4,22 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ShopNowBL.Models;
+using context= System.Web.HttpContext;
 
 
 namespace ShopNowBL.Repo
 {
     public class ExcepRepo
     {
-        public bool addException(tblErrorLog ex)
+        public void addException(Exception ex)
         {
-            bool result = false;
+            
             using(DBTContext context=new DBTContext())
             {
-                context.tblErrorLogs.Add(ex);
+                tblErrorLog objerrorlog = new tblErrorLog();
+                string exepurl = System.Web.HttpContext.Current.Request.Url.AbsolutePath;
+
+                objerrorlog.ExcepMsg = ex.Message.ToString();   
+                objerrorlog.ExcepType = ex.GetType().Name.ToString();
+                objerrorlog.ExcepUrl = exepurl;
+                objerrorlog.ExcepSource = ex.ToString();
+                objerrorlog.LogDate = DateTime.Now;
+
+                context.tblErrorLogs.Add(objerrorlog);
                 context.SaveChanges();
-                result = true;
+               
             }
-            return result;
+            
         }
     }
 }

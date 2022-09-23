@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "csvUpload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="card mb-4">
+            <h5 class="card-header">CSV Upload</h5>
+            <hr class="my-0" />
+            <div class="card-body">
+
+                <div style="margin-top:20px;">
+                    <input type="file" id="FileUpload1" />
+                    <input type="button" id="btnUpload" class="btn btn-primary" style="margin-left: 10px; background-color: #2651be;" value="Upload Data" />
+                </div>
+
+                <script>
+    $(document).ready(function () {
+        $("#btnUpload").on("click", function () {
+            UploadData();
+        });
+    });
+
+    function UploadData() {
+
+            if (window.FormData !== undefined) {
+                var fileUpload = $("#FileUpload1").get(0);
+
+                var files = fileUpload.files;
+                if (files.length > 0) {
+                    var fileData = new FormData();
+                    for (var i = 0; i < files.length; i++) {
+                        fileData.append(files[i].name, files[i]);
+                    }
+                    fileData.append("groupId", $('#hdnGroupID').val());
+
+                        $("#divLoader").show();
+                        $.ajax({
+                            url: '@Url.Action("UploadCsv", "Home")',
+                            type: "POST",
+                            contentType: false, // Not to set any content header
+                            processData: false, // Not to process data
+                            data: fileData,
+                            success: function (result) {
+                                cuteAlert({
+                                    type: "success",
+                                    title: "Uploaded",
+                                    message: "Data Uploaded Successfully!",
+                                    buttonText: "Okay"
+                                })
+                                $("#divLoader").hide();
+                                //alert(result);
+                            },
+                            error: function (err) {
+                                cuteAlert({
+                                    type: "error",
+                                    title: "Oops..",
+                                    message: "There is some problem in uploading data",
+                                    buttonText: "Okay"
+                                })
+                                $("#divLoader").hide();
+                                //alert(err.statusText);
+                            }
+                        });
+                    }
+
+
+                else {
+                    cuteAlert({
+                        type: "error",
+                        title: "Oops..",
+                        message: "Please select file to upload",
+                        buttonText: "Okay"
+                    })
+                }
+        }
+    }
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+

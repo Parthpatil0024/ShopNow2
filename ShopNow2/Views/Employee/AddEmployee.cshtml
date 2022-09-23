@@ -16,9 +16,10 @@
                 @using (Html.BeginForm("saveEmployee", "Employee", FormMethod.Post))
                 {
                     <div class="row ">
+                        @Html.HiddenFor(model => model.Id)
                         <div class="mb-3 col-md-6">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Employee Name</label>
-                            @Html.HiddenFor(model=>model.Id)
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Name</label>
+
                             @Html.EditorFor(model => model.EmpName, new { htmlAttributes = new { @class = "form-control", pattern = "[a-zA-Z][a-zA-Z ]{2,}", required = "required", autofocus = true } })
 
                         </div>
@@ -26,13 +27,13 @@
                         <div class="mb-3 col-md-6">
                             <label class="col-sm-2 col-form-label" for="basic-default-address">Address</label>
 
-                            <div class="input-group input-group-merge">
-                                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+
+                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", required = "required" } })
 
 
 
 
-                            </div>
+
                         </div>
                         <div class="mb-3 col-md-6">
 
@@ -42,7 +43,7 @@
 
 
                         </div>
-                       
+
                     </div>
 
 

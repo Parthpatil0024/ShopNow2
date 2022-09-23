@@ -46,6 +46,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,12 +66,14 @@
     <Compile Include="Models\tblTransaction.cs" />
     <Compile Include="Models\tblTransactionItem.cs" />
     <Compile Include="Models\tblUser.cs" />
+    <Compile Include="Models\UserRoleProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repo\ExcepRepo.cs" />
     <Compile Include="Repo\TransactionRepo.cs" />
     <Compile Include="Repo\StockRepo.cs" />
     <Compile Include="Repo\StoreRepo.cs" />
     <Compile Include="Repo\UserRepo.cs" />
+    <Compile Include="Models\tblRole.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

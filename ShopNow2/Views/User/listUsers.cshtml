@@ -18,8 +18,12 @@
                 &nbsp;<a href='@Url.Action("addUser","User")' class='btn btn-primary'>
 
 
+
+
                     <span class="align-middle">Add User</span>
                 </a>
+                <a href='@Url.Action("exportToExcel", "User", new {type= "tblUser" })' class='btn btn-primary'><span class="align-middle">ExportToExcel</span></a>
+                <a href='@Url.Action("exportToCsv","User")' class='btn btn-primary'><span class="align-middle">ExportToCSV</span></a>
             </div>
             <br />
 

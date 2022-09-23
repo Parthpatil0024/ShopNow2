@@ -18,15 +18,15 @@ namespace ShopNowBL.Repo
     public class UserRepo
     {
 
-
-        public List<tblUser> listUsers()
+        ExcepRepo excepRepo=new ExcepRepo();
+        public async Task< List<tblUser>> listUsers()
         {
             List<tblUser> lstUsers = new List<tblUser>();
             using (DBTContext context = new DBTContext())
             {
-                lstUsers = context.tblUsers.ToList();
-               
-               
+                lstUsers = await context.tblUsers.ToListAsync();
+
+
             }
             return lstUsers;
 
@@ -34,7 +34,7 @@ namespace ShopNowBL.Repo
 
         public tblUser authenticateUser(string emailId, string password)
         {
-            tblUser user;
+            tblUser user=new tblUser();
             password = encrypt(password); 
 
             using (DBTContext context=new DBTContext())
@@ -125,6 +125,12 @@ namespace ShopNowBL.Repo
             return result;
         }
 
+        static async Task<bool> ExecuteAsync(SqlConnection conn, SqlCommand cmd)
+        {
+            await conn.OpenAsync();
+             await cmd.ExecuteNonQueryAsync();
+            return true;
+        }
         public bool saveUserAfterEdit(tblUser objUser)
         {
             bool result = false;
@@ -142,16 +148,21 @@ namespace ShopNowBL.Repo
                 "', CreatedDate= '" + objUser.CreatedDate +
                 "' where Id =" + objUser.Id;
 
-            SqlCommand comm = new SqlCommand(query, conn);  
-             conn.Open();
+            
+             
             try
             {
-                comm.ExecuteNonQuery();
-                result= true;
+                SqlCommand comm = new SqlCommand(query, conn);
+                result = Task.Run(async () =>
+               await ExecuteAsync(conn, comm) ).Result;
+
+                
+               
+
             }
-            catch (Exception)
+            catch (Exception  )
             {
-                result = false;
+               result = false;
             }
             finally
             {
